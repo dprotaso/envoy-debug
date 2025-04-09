@@ -1,0 +1,17 @@
+services:
+  encap:
+    image: "envoyproxy/envoy:debug-v1.33-latest"
+    ports:
+      - "10000:10000"
+    volumes:
+      - ${PWD}/encap.yaml:/config.yaml
+    command: ["-c", "config.yaml", "-l", "debug"]
+  decap:
+    image: "envoyproxy/envoy:debug-v1.33-latest"
+    depends_on:
+    - encap
+    ports:
+      - "10001:10001"
+    volumes:
+      - ${PWD}/decap.yaml:/config.yaml
+    command: ["-c", "config.yaml", "-l", "debug"]
