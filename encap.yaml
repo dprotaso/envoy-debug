@@ -36,13 +36,12 @@ static_resources:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.set_filter_state.v3.Config
               on_request_headers:
-              - object_key: envoy.filters.listener.original_dst.local_ip
+              - object_key: envoy.network.transport_socket.original_dst_address
                 shared_with_upstream: TRANSITIVE
                 format_string:
-          #         # text_format_source:
-          #           # inline_string: "172.20.0.3:10001"
                   json_format:
-                    local: 172.20.0.3:10001
+                    ip: 172.20.0.3
+                    port: 10001
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -87,11 +86,11 @@ static_resources:
     # This ensures HTTP/2 CONNECT is used for establishing the tunnel.
     type: ORIGINAL_DST
     lb_policy: CLUSTER_PROVIDED
-    original_dst_lb_config:
-      metadata_key:
-        key: envoy.filters.listener.original_dst
-        path:
-        - key: local
+    # original_dst_lb_config:
+      # metadata_key:
+      #   key: envoy.filters.listener.original_dst
+      #   path:
+      #   - key: local_ip
     typed_extension_protocol_options:
       envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
         "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
